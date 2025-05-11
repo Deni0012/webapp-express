@@ -1,6 +1,8 @@
+const connection = require('../data/movies_db');
+
 function index(req, res) {
 
-    res.send('Indice movie');
+    res.send('Index movie');
 
 };
 
