@@ -2,20 +2,29 @@ const connection = require('../data/movies_db');
 
 function index(req, res) {
 
-    const sql = 'SELECT * FROM movies_db.movies';
+    const { search } = req.query;
 
-    connection.query(sql, (err, results) => {
-        if (err) {
-            return res.status(500).json({
-                errorMessage: "Database disconnected!"
-            });
+    let sql = `
+        SELECT
+    movies.*, AVG(reviews.vote) as avg_vote
+    FROM
+    movies
+    LEFT JOIN 
+    reviews on movies.id = reviews.movie_id
+    `;
 
-        };
+    if (search) {
+        sql += `WHERE title like "%${search}%" OR director LIKE "%${search}%" OR abstract LIKE "%${search}%" `
+    }
 
+    sql += `GROUP BY movies.ID`
 
-        res.json(results);
-
-
+    conn.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: "Database diconnected!" })
+        res.json(results.map(result => ({
+            ...result,
+            imagepath: process.env.DB_IMG + result.image
+        })));
     });
 
 };
