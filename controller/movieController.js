@@ -1,5 +1,6 @@
 const connection = require('../data/movies_db');
 
+
 function index(req, res) {
 
     const { search } = req.query;
@@ -19,7 +20,7 @@ function index(req, res) {
 
     sql += `GROUP BY movies.ID`
 
-    conn.query(sql, (err, results) => {
+    connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: "Database diconnected!" })
         res.json(results.map(result => ({
             ...result,
@@ -34,7 +35,7 @@ function show(req, res) {
 
     const sqlMovie = 'SELECT * FROM movies_db.movies WHERE id = ?';
 
-    conn.query(sqlMovie, [id], (err, results) => {
+    connection.query(sqlMovie, [id], (err, results) => {
         if (err) {
             return res.status(500).json({
                 errorMessage: "Database diconnected!"
@@ -52,10 +53,10 @@ function show(req, res) {
 
         const sqlReviews = 'SELECT * FROM movies_db.reviews WHERE movie_id = ?';
 
-        conn.query(sqlReviews, [id], (err, reviewResults) => {
+        connection.query(sqlReviews, [id], (err, reviewResults) => {
             if (err) {
                 return res.status(500).json({
-                    errorMessage: "Database diconnected!"
+                    errorMessage: "Database disconnected!"
                 });
             }
 

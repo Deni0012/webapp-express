@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+require('dotenv').config();
 const cors = require('cors');
 
 //middlewares
@@ -12,7 +13,7 @@ const handleErrors = require('./middlewares/handleErrors');
 const movieRouter = require('./router/movies');
 
 app.use(cors({
-    origin: process.env.FRONT_END
+    origin: process.env.FE_APP
 }));
 
 app.use(express.static('public'));
@@ -20,7 +21,7 @@ app.use(express.static('public'));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('Benvenuto nella mia WebApplication');
+    res.send('Welcome to my WebApplication');
 })
 
 app.use('/movies', movieRouter);
