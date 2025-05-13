@@ -33,7 +33,7 @@ function index(req, res) {
 function show(req, res) {
     const { id } = req.params;
 
-    const sqlMovie = 'SELECT * FROM movies_db.movies WHERE id = ?';
+    const sqlMovie = 'SELECT * FROM movies WHERE id = ?';
 
     connection.query(sqlMovie, [id], (err, results) => {
         if (err) {
@@ -50,6 +50,7 @@ function show(req, res) {
         }
 
         const movie = results[0];
+        movie.imagepath = process.env.DB_IMG + movie.image;
 
         const sqlReviews = 'SELECT * FROM movies_db.reviews WHERE movie_id = ?';
 
@@ -66,7 +67,20 @@ function show(req, res) {
     });
 };
 
+function starReview(req, res) {
+    const { id } = req.params;
+    const { text, name, vote } = req.body;
+
+    if (!text || !name || !vote) {
+        return res.status(400).json({
+            errorMessage: 'Please fill in all fields!'
+        });
+    };
+
+    res.send('I added a new review!');
+}
 
 
 
-module.exports = { index, show };
+
+module.exports = { index, show, starReview };
